@@ -8,49 +8,15 @@ class Player
   def initialize(name:, turns:)
     @name = name
     @turns = turns
-    @frames = []
-  end
-
-  def calc_frames
-    # getting individual pinfalls by frame
-    number_of_frames = 1
-    index = 0
-    loop do
-      frames << turns[index..index+2] if number_of_frames == 10
-      number_of_frames+=1
-      break if number_of_frames > 10
-
-      if turn_is_strike?(index)
-        frames << %W{#{turns[index]}}
-        index+=1
-      else
-        frames << turns[index..index+1]
-        index+=2
-      end
-    end
-    frames
-  end
-
-  def calc_scores
-    @scores = frames.map.with_index do |fr, index|
-      sum = fr.map(&:to_i).reduce(:+)
-      if sum == 10
-        if fr.count > 1
-          sum + frames[index+1][0].to_i
-        else
-          sum + frames[index+1..index+2].flatten[0..1].map(&:to_i).reduce(:+)
-        end
-      else
-        sum
-      end
-    end
+    @frames = calc_frames
+    @scores = calc_scores
   end
 
   def accumulated_scores
     scores.map.with_index{|fr, i| scores[0..i].reduce(:+) }
   end
 
-  def decorate_pinfalls
+  def decorate_frames
     frames.map do |pinfall|
       sum = pinfall.map(&:to_i).reduce(:+)
       if sum == 10
@@ -65,11 +31,46 @@ class Player
     end
   end
 
-  def turn_is_strike?(index)
-    turns[index] == STRIKE
+  private
+
+  def calc_frames
+    [].tap do |frames|
+      number_of_frames = 1
+      index = 0
+      loop do
+        frames << turns[index..index+2] if number_of_frames == 10
+        number_of_frames+=1
+        break if number_of_frames > 10
+
+        if roll_is_a_strike?(index)
+          frames << %W{#{turns[index]}}
+          index+=1
+        else
+          frames << turns[index..index+1]
+          index+=2
+        end
+      end
+    end
   end
 
-  private
+  def calc_scores
+    frames.map.with_index do |fr, index|
+      sum = fr.map(&:to_i).reduce(:+)
+      if sum == 10
+        if fr.count > 1
+          sum + frames[index+1][0].to_i
+        else
+          sum + frames[index+1..index+2].flatten[0..1].map(&:to_i).reduce(:+)
+        end
+      else
+        sum
+      end
+    end
+  end
+
+  def roll_is_a_strike?(index)
+    turns[index] == STRIKE
+  end
 
   def valid_scores?
     invalid_score = frames[0..frames.size-2].detect do |scores|
