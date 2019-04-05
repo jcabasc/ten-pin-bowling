@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'active_model'
 class Game # :nodoc:
   include ActiveModel::Model
@@ -6,29 +8,28 @@ class Game # :nodoc:
   VALID_INPUT = ('0'..'10').to_a + %w[F]
   def initialize(turns:)
     @turns = turns
-    @final_output = ''
+    @final_output = %w[Frame 1 2 3 4 5 6 7 8 9 10].join("\t\t") + "\n"
   end
 
   def execute
-    player_names = turns.map { |t| t[0] }.uniq
-    add_output(%w[Frame 1 2 3 4 5 6 7 8 9 10].join("\t\t"))
-
     player_names.each do |name|
-      player_turns = turns
+      player_rolls = turns
                      .select { |turn| turn[0] == name }
                      .map { |pinfall| pinfall[1] }
-      player = Player.new(name: name, turns: player_turns)
-      if player.valid?
-        generate_dynamic_output_for(player)
-      else
-        puts player.errors.full_messages
-      end
+      player = Player.new(name: name, turns: player_rolls)
+      next generate_dynamic_output_for(player) if player.valid?
+
+      puts player.errors.full_messages
     end
 
     print_output
   end
 
   private
+
+  def player_names
+    turns.map { |t| t[0] }.uniq
+  end
 
   def add_output(str, new_line = true)
     str += "\n" if new_line

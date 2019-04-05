@@ -5,12 +5,11 @@ class Player # :nodoc:
   include ActiveModel::Model
   attr_reader :name, :turns, :scores, :frames
   validate :valid_scores?
-  STRIKE = '10'
   def initialize(name:, turns:)
     @name = name
     @turns = turns
-    @frames = calc_frames
-    @scores = calc_scores
+    @frames = calculate_frames
+    @scores = calculate_scores
   end
 
   def accumulated_scores
@@ -18,62 +17,43 @@ class Player # :nodoc:
   end
 
   def decorate_frames
-    frames.map do |pinfall|
-      sum = pinfall.map(&:to_i).reduce(:+)
-      if sum == 10
-        if pinfall.count == 1
-          "\tX"
-        else
-          [pinfall[0], '/'].join("\t")
-        end
-      else
-        pinfall.join("\t").gsub('10', 'X')
-      end
+    frames.map do |frame|
+      sum = frame.map(&:to_i).reduce(:+)
+      next frame.join("\t").gsub('10', 'X') if sum != 10
+
+      next "\tX" if frame.size == 1
+
+      [frame[0], '/'].join("\t")
     end
   end
 
   private
 
-  def calc_frames
+  def calculate_frames
     [].tap do |frames|
-      number_of_frames = 1
-      index = 0
-      loop do
-        frames << turns[index..index + 2] if number_of_frames == 10
-        number_of_frames += 1
-        break if number_of_frames > 10
+      frame = []
+      frames << loop do
+        break turns[0..turns.size - 1] if frames.size == 9
 
-        if roll_is_a_strike?(index)
-          frames << %W[#{turns[index]}]
-          index += 1
-        else
-          frames << turns[index..index + 1]
-          index += 2
-        end
+        frame << turns.shift
+        next unless frame.map(&:to_i).reduce(:+) == 10 || frame.size > 1
+
+        frames << frame
+        frame = []
       end
     end
   end
 
-  def calc_scores
-    frames.map.with_index do |fr, index|
-      sum = fr.map(&:to_i).reduce(:+)
-      if sum == 10
-        if fr.count > 1
-          sum + frames[index + 1][0].to_i
-        else
-          sum + frames[index + 1..index + 2]
-                .flatten[0..1]
-                .map(&:to_i)
-                .reduce(:+)
-        end
-      else
-        sum
-      end
-    end
-  end
+  def calculate_scores
+    frames.map.with_index do |frame, index|
+      sum = frame.map(&:to_i).reduce(:+)
+      next sum if sum != 10
 
-  def roll_is_a_strike?(index)
-    turns[index] == STRIKE
+      next sum + frames[index + 1][0].to_i if frame.count > 1
+
+      sum + frames[index + 1..index + 2].flatten[0..1].map(&:to_i)
+                                        .reduce(:+)
+    end
   end
 
   def valid_scores?

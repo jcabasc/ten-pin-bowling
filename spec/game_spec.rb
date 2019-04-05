@@ -14,23 +14,20 @@ describe Game do
     before { subject.execute }
     context 'when perfect score' do
       let(:path) { './spec/fixtures/perfect_score.txt' }
-      it do
-        expect(subject.final_output).to eql FixtureSupport.perfect_score_response
-      end
+      let(:expected_response) { FixtureSupport.perfect_score_response }
+      it { expect(subject.final_output).to eql expected_response }
     end
 
     context 'when all rolls are 0 and/or fouls' do
       let(:path) { './spec/fixtures/zero_rolls.txt' }
-      it do
-        expect(subject.final_output).to eql FixtureSupport.all_rolls_zero_response
-      end
+      let(:expected_response) { FixtureSupport.all_rolls_zero_response }
+      it { expect(subject.final_output).to eql expected_response }
     end
 
     context 'when regular score' do
       let(:path) { './spec/fixtures/normal_scores.txt' }
-      it do
-        expect(subject.final_output).to eql FixtureSupport.regular_score_response
-      end
+      let(:expected_response) { FixtureSupport.regular_score_response }
+      it { expect(subject.final_output).to eql expected_response }
     end
   end
 
