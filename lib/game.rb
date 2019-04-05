@@ -19,7 +19,7 @@ class Game # :nodoc:
       player = Player.new(name: name, turns: player_rolls)
       next generate_dynamic_output_for(player) if player.valid?
 
-      puts player.errors.full_messages
+      return puts player.errors.full_messages
     end
 
     print_output

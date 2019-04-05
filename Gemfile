@@ -10,4 +10,5 @@ gem 'rubocop', '~> 0.63.1', require: false
 
 group :test do
   gem 'rspec', '3.8.0'
+  gem 'simplecov', require: false
 end
