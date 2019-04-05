@@ -1,8 +1,8 @@
-# A sample Gemfile
+# frozen_string_literal: true
 
 source 'https://rubygems.org'
 
-gem "activemodel", require: "active_model"
+gem 'activemodel', require: 'active_model'
 gem 'byebug', '11.0.1'
 gem 'rake', '12.3.2'
 gem 'require_all', '2.0.0'
