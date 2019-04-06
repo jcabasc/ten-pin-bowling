@@ -3,20 +3,20 @@
 require 'active_model'
 class Game # :nodoc:
   include ActiveModel::Model
-  attr_reader :turns, :final_output
+  attr_reader :rolls, :final_output
   validate :valid_input?
   VALID_INPUT = ('0'..'10').to_a + %w[F]
-  def initialize(turns:)
-    @turns = turns
+  def initialize(rolls:)
+    @rolls = rolls
     @final_output = %w[Frame 1 2 3 4 5 6 7 8 9 10].join("\t\t") + "\n"
   end
 
   def execute
     player_names.each do |name|
-      player_rolls = turns
-                     .select { |turn| turn[0] == name }
+      player_rolls = rolls
+                     .select { |roll| roll[0] == name }
                      .map { |pinfall| pinfall[1] }
-      player = Player.new(name: name, turns: player_rolls)
+      player = Player.new(name: name, rolls: player_rolls)
       next generate_dynamic_output_for(player) if player.valid?
 
       return puts player.errors.full_messages
@@ -28,7 +28,7 @@ class Game # :nodoc:
   private
 
   def player_names
-    turns.map { |t| t[0] }.uniq
+    rolls.map { |t| t[0] }.uniq
   end
 
   def add_output(str, new_line = true)
@@ -49,11 +49,10 @@ class Game # :nodoc:
   end
 
   def valid_input?
-    invalid_input = turns.map(&:last).detect do |pinfall|
+    invalid_input = rolls.map(&:last).detect do |pinfall|
       !VALID_INPUT.include?(pinfall)
     end
-    msg = 'Please check your input for an invalid value or a'\
-    ' row that is not tab-separated.'
+    msg = I18n.t('game.errors.invalid_input')
     errors.add(:base, msg) if invalid_input.present?
   end
 end

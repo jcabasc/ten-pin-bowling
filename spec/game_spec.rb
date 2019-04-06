@@ -2,13 +2,13 @@
 
 require 'spec_helper'
 describe Game do
-  let(:turns_by_player) do
+  let(:rolls_by_player) do
     File
       .readlines(path)
       .reject { |line| line == "\n" }
       .collect { |pf| pf.delete("\n").split("\t") }
   end
-  subject { Game.new(turns: turns_by_player) }
+  subject { Game.new(rolls: rolls_by_player) }
 
   describe 'execute' do
     context 'success' do
@@ -33,9 +33,9 @@ describe Game do
     end
 
     context 'failure' do
-      let(:path) { './spec/fixtures/invalid_pinfalls_single_frame.txt' }
+      let(:path) { './spec/fixtures/invalid_sum_roll.txt' }
       let(:message) do
-        "Martin can't knock down more than 10 pins in a single frame.\n"
+        I18n.t('player.errors.invalid_sum_roll', name: 'Martin') + "\n"
       end
       it { expect { subject.execute }.to output(message).to_stdout }
     end
@@ -45,8 +45,7 @@ describe Game do
     context 'when invalid input' do
       let(:path) { './spec/fixtures/invalid_input.txt' }
       let(:error_msg) do
-        'Please check your input for an invalid value or a row'\
-        ' that is not tab-separated.'
+        I18n.t('game.errors.invalid_input')
       end
       before { subject.valid? }
       it do

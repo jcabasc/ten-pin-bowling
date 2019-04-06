@@ -5,12 +5,18 @@ require 'byebug'
 require 'rubygems'
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each { |file| require file }
 
+I18n.load_path << Dir[File.expand_path('config/locales') + '/*.yml']
+I18n.default_locale = :en
+
 namespace :ten_pin_bowling do
   task :start do
     file_path = ARGV[1]
     if file_path.present?
-      turns = File.readlines(file_path).reject { |line| line == "\n" }
-      game = Game.new(turns: turns.collect { |pf| pf.delete("\n").split("\t") })
+      rolls = File
+              .readlines(file_path)
+              .reject { |line| line == "\n" }
+              .collect { |pf| pf.delete("\n").tr("\t", ' ').split(' ') }
+      game = Game.new(rolls: rolls)
 
       if game.valid?
         game.execute
@@ -18,8 +24,7 @@ namespace :ten_pin_bowling do
         puts game.errors.full_messages
       end
     else
-      puts 'You must provide a file path by running for instance'\
-           ' `rake ten_pin_bowling:start scores.txt`'
+      puts I18n.t('system.errors.no_file_present')
     end
   end
 end

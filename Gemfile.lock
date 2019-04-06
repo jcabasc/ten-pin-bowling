@@ -63,6 +63,7 @@ PLATFORMS
 DEPENDENCIES
   activemodel
   byebug (= 11.0.1)
+  i18n (= 1.6.0)
   rake (= 12.3.2)
   require_all (= 2.0.0)
   rspec (= 3.8.0)

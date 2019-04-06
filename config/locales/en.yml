@@ -1,0 +1,13 @@
+en:
+  system:
+    errors:
+      no_file_present: "You must provide a file path by running for instance `rake ten_pin_bowling:start normal_scores.txt`"
+  player:
+    errors:
+      invalid_sum_roll: "%{name} can't knock down more than 10 pins in a single frame."
+      invalid_sum_roll_for_pairs: "%{name}'s sum rolls in the last frame can't be greater than 10 for the 1st and 2nd roll or 2nd and 3rd roll."
+      third_roll_not_allowed: "%{name} doesn't have either a strike or a spare in the last frame, so a third roll is not allowed."
+      rolls_number_invalid: "%{name} can't roll more than 3 times in the last frame."
+  game:
+    errors:
+      invalid_input: "Please check your input for an invalid value or a row that is not tab-separated."

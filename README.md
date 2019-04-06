@@ -11,7 +11,7 @@ Developed by: `Jonathan Cabas Candama`
 # Getting Started
 
 ``
-  $ rake ten_pin_bowling:start "spec/fixtures/scores_test1.txt"
+  $ rake ten_pin_bowling:start "spec/fixtures/perfect_score.txt"
 ``
 
 More fixtures are included in "spec/fixtures" folder.
