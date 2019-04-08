@@ -74,6 +74,15 @@ describe Player do
 
   describe 'validations' do
     before { subject.valid? }
+
+    context 'when an uncompleted number of frames were input' do
+      let(:rolls) { %w[6 4 10 10 10 10 10 10 10 3 5] }
+      let(:message) do
+        I18n.t('player.errors.invalid_size_of_frames', name: subject.name)
+      end
+      it { expect(subject.errors.full_messages.pop).to eql message }
+    end
+
     context 'when invalid sum roll for regular frames' do
       let(:rolls) { %w[7 9 10 10 10 10 10 10 10 10 10 10 10] }
       let(:message) do
@@ -94,6 +103,14 @@ describe Player do
       let(:rolls) { %w[10 10 10 10 10 10 10 10 10 8 1 10] }
       let(:message) do
         I18n.t('player.errors.third_roll_not_allowed', name: subject.name)
+      end
+      it { expect(subject.errors.full_messages.pop).to eql message }
+    end
+
+    context 'when there is one missing roll in the last frame' do
+      let(:rolls) { %w[6 4 10 10 10 10 10 10 10 10 3 7] }
+      let(:message) do
+        I18n.t('player.errors.missing_third_roll', name: subject.name)
       end
       it { expect(subject.errors.full_messages.pop).to eql message }
     end

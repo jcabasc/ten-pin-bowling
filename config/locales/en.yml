@@ -8,6 +8,8 @@ en:
       invalid_sum_roll_for_pairs: "%{name}'s sum rolls in the last frame can't be greater than 10 for the 1st and 2nd roll or 2nd and 3rd roll."
       third_roll_not_allowed: "%{name} doesn't have either a strike or a spare in the last frame, so a third roll is not allowed."
       rolls_number_invalid: "%{name} can't roll more than 3 times in the last frame."
+      invalid_size_of_frames: "You need to input a completed set of frames for %{name}."
+      missing_third_roll: "%{name} is missing one more roll in the last frame because he has either a spare or a set of strikes"
   game:
     errors:
-      invalid_input: "Please check your input for an invalid value or a row that is not tab-separated."
+      invalid_input: "Please check your input for an invalid value. Valid values are any integer between 0 and 10, plus the letter F"
