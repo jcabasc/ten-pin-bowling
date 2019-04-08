@@ -9,6 +9,16 @@ Developed by: `Jonathan Cabas Candama`
 * Ruby 2.6.0
 * RVM
 
+# Installation
+
+Some of the following steps are not strictly required. i.e: you can use a different ruby version manager.
+
+* [Install RVM](https://rvm.io/rvm/install)
+* rvm install ruby-2.6.0 (if needed)
+* cd ten-pin-bowling
+* gem install bundler (if needed)
+* bundle install
+
 # Getting Started
 
 ``
