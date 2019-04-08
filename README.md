@@ -7,6 +7,7 @@ Developed by: `Jonathan Cabas Candama`
 # Requirements
 
 * Ruby 2.6.0
+* RVM
 
 # Getting Started
 
